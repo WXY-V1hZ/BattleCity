@@ -52,7 +52,7 @@ class Tree(pygame.sprite.Sprite):
 
 
 # 地图
-class Map():
+class Map:
 	def __init__(self, stage):
 		self.brickGroup = pygame.sprite.Group()
 		self.ironGroup  = pygame.sprite.Group()
