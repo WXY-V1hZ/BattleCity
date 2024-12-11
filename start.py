@@ -3,75 +3,7 @@ import sys
 import pygame
 
 from entity import home, scene, tank, food
-
-# 开始界面显示
-def show_start_interface (screen, width, height):
-    tfont = pygame.font.Font('font/simkai.ttf', width // 5)
-    cfont = pygame.font.Font('font/simkai.ttf', width // 20)
-    title = tfont.render(u'TANK', True, (255, 0, 0))
-    content1 = cfont.render(u'1 PLAYER（按1）', True, (0, 0, 255))
-    content2 = cfont.render(u'2 PLAYER（按2）', True, (0, 0, 255))
-    trect = title.get_rect()
-    trect.midtop = (width / 2, height / 5)
-    crect1 = content1.get_rect()
-    crect1.midtop = (width / 2, height / 1.8)
-    crect2 = content2.get_rect()
-    crect2.midtop = (width / 2, height / 1.6)
-    screen.blit(title, trect)
-    screen.blit(content1, crect1)
-    screen.blit(content2, crect2)
-    pygame.display.update()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    return 1
-                if event.key == pygame.K_2:
-                    return 2
-
-
-# 结束界面显示
-def show_end_interface (screen, width, height, is_win):
-    bg_img = pygame.image.load("images/others/background.png")
-    screen.blit(bg_img, (0, 0))
-    if is_win:
-        font = pygame.font.Font('font/simkai.ttf', width // 10)
-        content = font.render(u'恭喜通关！', True, (255, 0, 0))
-        rect = content.get_rect()
-        rect.midtop = (width / 2, height / 2)
-        screen.blit(content, rect)
-    else:
-        fail_img = pygame.image.load("images/others/gameover.png")
-        rect = fail_img.get_rect()
-        rect.midtop = (width / 2, height / 2)
-        screen.blit(fail_img, rect)
-    pygame.display.update()
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-
-
-# 关卡切换
-def show_switch_stage (screen, width, height, stage):
-    bg_img = pygame.image.load("images/others/background.png")
-    screen.blit(bg_img, (0, 0))
-    font = pygame.font.Font('font/simkai.ttf', width // 10)
-    content = font.render(u'第%d关' % stage, True, (0, 255, 0))
-    rect = content.get_rect()
-    rect.midtop = (width / 2, height / 2)
-    screen.blit(content, rect)
-    pygame.display.update()
-    delay_event = pygame.constants.USEREVENT
-    pygame.time.set_timer(delay_event, 1000)
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
-            if event.type == delay_event:
-                return
+from views import ui
 
 
 # 主函数
@@ -104,7 +36,7 @@ def main ():
     start_sound.set_volume(1)
 
     # 开始界面，获取玩家数量
-    num_player = show_start_interface(screen, 630, 630)
+    num_player = ui.show_start(screen, 630, 630)
     # 播放游戏开始的音乐
     start_sound.play()
 
@@ -118,13 +50,18 @@ def main ():
 
     # 主循环
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
         # 关卡递增
         stage += 1
         # 通关或者失败，退出
         if stage > num_stage or is_gameover:
             break
         # 显示关卡界面
-        show_switch_stage(screen, 630, 630, stage)
+        ui.show_switch_stage(screen, 630, 630, stage)
 
         # 该关卡坦克总数量
         enemytanks_total = min(stage * 12, 60)
@@ -192,6 +129,7 @@ def main ():
 
         # 关卡主循环
         while True:
+
             # 失败
             if is_gameover is True:
                 break
@@ -558,9 +496,9 @@ def main ():
 
     # 根据是否失败显示胜败界面
     if not is_gameover:
-        show_end_interface(screen, 630, 630, True)
+        ui.show_end(screen, 630, 630, True)
     else:
-        show_end_interface(screen, 630, 630, False)
+        ui.show_end(screen, 630, 630, False)
 
 if __name__ == '__main__':
     main()
