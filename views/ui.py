@@ -1,8 +1,12 @@
 import pygame, sys
 
 from entity import home, scene, tank, food
+from entity.resources import Resources
 from . import menu
-from utils import config, archive
+from utils import config
+import time
+
+from . import archive
 
 
 def show_start(screen, width, height):
@@ -23,7 +27,7 @@ def show_start(screen, width, height):
 
         # 绘制选项
         for i, item in enumerate(start_items):
-            color = (0, 255, 0) if i == selected_index else (0, 0, 255)  # 高亮选中项
+            color = (0, 255, 0) if i == selected_index else (255, 255, 255)  # 高亮选中项
             content = cfont.render(f'{item}', True, color)
             rect = content.get_rect()
             rect.midtop = (width / 2, height / 1.8 + i * 50)
@@ -44,40 +48,105 @@ def show_start(screen, width, height):
                 elif event.key == pygame.K_RETURN:  # 按回车键确认
                     if   selected_index == 0: return 1
                     elif selected_index == 1: return 2
-                    elif selected_index == 2:
-                        archive.load_game()
+                    elif selected_index == 2: # 读档
+                        return archive.show_saves(screen, width, height, is_save = False)
                     else:
                         pygame.quit()
-                        sys.exit()  # 退出游戏
+                        sys.exit()
 
-                if not menu.listen(screen, width, height, event):
-                    break
+def transition_animation (screen, width, height, is_win):
+    """过渡动画效果：截取最后的画面并逐渐覆盖，胜利为白色，失败为红色"""
+    # 胜利和失败的颜色设置
+    overlay_color = (255, 255, 255) if is_win else (255, 0, 0)  # 胜利为白色，失败为红色
+    max_alpha = 128  # 最大透明度值（可以根据需求调整）
+    transition_duration = 1.0  # 过渡持续时间（秒）
+    transition_frames = 60  # 动画帧数（60帧，假设每帧大约1/60秒）
+
+    # 初始背景填充
+    screen.fill((0, 0, 0))
+    pygame.display.update()
+
+    for frame in range(transition_frames):
+        # 计算每一帧的透明度（从0到最大透明度）
+        overlay_alpha = int((max_alpha * frame) / transition_frames)
+
+        # 在原画面上叠加一个透明的颜色层
+        overlay_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        overlay_surface.fill((overlay_color[0], overlay_color[1], overlay_color[2], overlay_alpha))
+
+        screen.blit(overlay_surface, (0, 0))
+        pygame.display.update()
+
+        time.sleep(transition_duration / transition_frames)  # 每帧间隔时间
 
 # 结束界面显示
-def show_end (screen, width, height, is_win):
-    bg_img = pygame.image.load("assets/images/others/background.png")
-    screen.blit(bg_img, (0, 0))
-    if is_win:
-        font = pygame.font.Font(config.global_font, width // 10)
-        content = font.render(u'恭喜通关！', True, (255, 0, 0))
+def show_end(screen, width, height, is_win):
+    # 获取资源
+    resources = Resources.get_instance()
+
+    transition_animation(screen, width, height, is_win)
+
+    # 设置字体
+    tfont = pygame.font.Font(config.global_font, width // 10)  # 大标题字体
+    cfont = pygame.font.Font(config.global_font, width // 20)  # 选项字体
+
+    # 选项内容
+    end_items = ['返回主页', '退出游戏']
+    selected_index = 0  # 当前选中的选项
+
+    running = True
+    while running:
+        # 清空屏幕并绘制背景
+        screen.fill((0, 0, 0))  # 背景填充为黑色
+        screen.blit(resources.bg_img, (0, 0))  # 背景图
+
+        # 绘制胜利或失败信息
+        if is_win:
+            content = tfont.render(u'恭喜通关！', True, (0, 255, 0))  # 胜利时的文字
+        else:
+            content = tfont.render(u'游戏失败', True, (255, 0, 0))  # 失败时的文字
+
         rect = content.get_rect()
-        rect.midtop = (width / 2, height / 2)
+        rect.midtop = (width / 2, height / 5)  # 定位文本
         screen.blit(content, rect)
-    else:
-        fail_img = pygame.image.load("assets/images/others/gameover.png")
-        rect = fail_img.get_rect()
-        rect.midtop = (width / 2, height / 2)
-        screen.blit(fail_img, rect)
-    pygame.display.update()
-    while True:
+
+        # 绘制选项
+        for i, item in enumerate(end_items):
+            color = (0, 255, 0) if i == selected_index else (255, 255, 255)  # 高亮选中项
+            content = cfont.render(f'{item}', True, color)
+            rect = content.get_rect()
+            rect.midtop = (width / 2, height / 1.8 + i * 50)  # 定位选项
+            screen.blit(content, rect)
+
+        pygame.display.update()  # 更新屏幕
+
+        # 处理事件
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:  # 按上箭头
+                    selected_index = (selected_index - 1) % len(end_items)
+                elif event.key == pygame.K_DOWN:  # 按下箭头
+                    selected_index = (selected_index + 1) % len(end_items)
+                elif event.key == pygame.K_RETURN:  # 按回车键确认
+                    if selected_index == 0: # 回到主页
+                        return "back_to_start"
+                    elif selected_index == 1: # 退出游戏
+                        pygame.quit()
+                        sys.exit()
+                    else:
+                        pygame.quit()
+                        sys.exit()
 
-# 关卡切换界面
+                    # 关卡切换界面
+
 def show_switch_stage(screen, width, height, stage):
-    bg_img = pygame.image.load("assets/images/others/background.png")
-    screen.blit(bg_img, (0, 0))
+    # 获取资源
+    resources = Resources.get_instance()
+
+    screen.blit(resources.bg_img, (0, 0))
     font = pygame.font.Font(config.global_font, width // 10)
     content = font.render(u'第%d关' % stage, True, (0, 255, 0))
     rect = content.get_rect()
@@ -99,7 +168,10 @@ def show_switch_stage(screen, width, height, stage):
                 pygame.time.set_timer(delay_event, 0)  # 停止定时器
                 return
 
-def show_game(screen, width, height, num_player, stage, clock, resources):
+def show_game(screen, width, height, num_player, stage, clock, game_data):
+    # 获取资源
+    resources = Resources.get_instance()
+
     # 该关卡坦克总数量
     enemytanks_total = min(stage * 12, 60)
     # 场上存在的敌方坦克总数量
@@ -164,6 +236,9 @@ def show_game(screen, width, height, num_player, stage, clock, resources):
     appearances.append(appearance_img.subsurface((48, 0), (48, 48)))
     appearances.append(appearance_img.subsurface((96, 0), (48, 48)))
 
+    if game_data:
+        pass # 将game_data覆盖到基础的数据上
+
     # 关卡主循环
     while True:
         # 胜利
@@ -176,8 +251,14 @@ def show_game(screen, width, height, num_player, stage, clock, resources):
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                if not menu.listen(screen, width, height, event):
-                    break
+                menu_result = menu.listen(screen, width, height, event)
+                if menu_result:
+                    if menu_result == "back_to_start":
+                        return "back_to_start"
+                    elif isinstance(menu_result, dict):
+                        return menu_result
+                else: break
+
 
             # 增加坦克事件，检验是否还有敌方坦克 且 场上是否还能增加坦克
             if event.type == genEnemyEvent and enemytanks_total > 0 and enemytanks_now < enemytanks_now_max:

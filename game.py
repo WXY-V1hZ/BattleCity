@@ -18,6 +18,7 @@ def main ():
     stage = 0
     num_stage = 2
     is_win = True
+    game_data = None
     clock = pygame.time.Clock()
     current_state = "start"
 
@@ -36,20 +37,31 @@ def main ():
 
         # 当前状态为开始
         if current_state == "start":
-            num_player = ui.show_start(screen, width, height)
-            current_state = "playing"
+            start_result = ui.show_start(screen, width, height)
+            if isinstance(start_result, int):
+                num_player = start_result
+            else:
+                game_data = start_result
+            current_state = "game"
         # 当前状态为游玩中
-        elif current_state == "playing":
-            # 关卡递增
-            stage += 1
-
-            # 显示关卡界面
-            ui.show_switch_stage(screen, width, width, stage)
-            # 播放开始音乐
-            resources.start_sound.play()
+        elif current_state == "game":
+            # 不需要加载存档
+            if not game_data:
+                stage += 1
+                # 显示关卡界面
+                ui.show_switch_stage(screen, width, width, stage)
+                # 播放开始音乐
+                resources.start_sound.play()
 
             # 进入游戏
-            game_result = ui.show_game(screen, width, height, num_player, stage, clock, resources)
+            game_result = ui.show_game(screen, width, height, num_player, stage, clock, game_data)
+
+            if game_result == "back_to_start":
+                current_state = "start"
+                continue
+            elif isinstance(game_result, dict):
+                game_data = game_result
+                continue
 
             # 通关
             if stage == num_stage:
@@ -59,10 +71,18 @@ def main ():
             if game_result == 'lose':
                 is_win = False
                 current_state = "end"
+
+            game_data = None
         # 当前状态为结束
         elif current_state == "end":
             # 根据是否失败显示胜败界面
-            ui.show_end(screen, width, height, is_win)
+            end_result = ui.show_end(screen, width, height, is_win)
+
+            if end_result == 'back_to_start':
+                current_state = "start"
+            else:
+                pygame.quit()
+                sys.exit()
 
 if __name__ == '__main__':
     main()

@@ -1,8 +1,8 @@
 import pygame, sys
 from PIL import Image, ImageFilter
 
-from utils import archive, config
-from views import ui
+from utils import config
+from . import archive
 
 def apply_gaussian_blur(surface, radius=10):
     """使用 Pillow 对传入的 surface 进行高斯模糊"""
@@ -61,7 +61,7 @@ def show(screen, width, height):
                     elif selected_index == 2:
                         return 'load_game'
                     elif selected_index == 3:
-                        return 'back_to_title'
+                        return 'back_to_start'
                     elif selected_index == 4:
                         return 'quit_game'
                 else:  # 按Esc键退出菜单
@@ -76,10 +76,10 @@ def listen(screen, width, height, event):
             pygame.quit()
             sys.exit()
         elif menu_result == "save_game":
-            archive.save_game()
+            return archive.show_saves(screen, width, height, True)
         elif menu_result == "load_game":
-            archive.load_game()
-        elif menu_result == "back_to_title":
-            pass
+            return archive.show_saves(screen, width, height, False)
+        elif menu_result == "back_to_start":
+            return "back_to_start"
         else:
             return 0
