@@ -1,18 +1,18 @@
 import pygame
 
-
 class Resources:
     _instance = None
 
     @staticmethod
-    def get_instance ():
+    def get_instance():
         if Resources._instance is None:
             Resources._instance = Resources()
         return Resources._instance
 
-    def __init__ (self):
+    def __init__(self):
+        # 如果已经有实例存在，则直接返回，不做任何初始化
         if Resources._instance is not None:
-            raise Exception("This is a singleton class, use get_instance() method")
+            return
 
         self.bg_img = pygame.image.load("assets/images/others/background.png")
         self.add_sound = pygame.mixer.Sound("assets/audios/add.wav")
@@ -26,7 +26,7 @@ class Resources:
         # 设置音效音量
         self.set_volume(1)
 
-    def set_volume (self, volume):
+    def set_volume(self, volume):
         """设置所有音效的音量"""
         self.add_sound.set_volume(volume)
         self.bang_sound.set_volume(volume)
