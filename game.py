@@ -2,9 +2,9 @@ import sys
 
 import pygame
 
-from entity import home, scene, tank, food
 from entity.resources import Resources
-from views import ui, menu
+from views import ui
+
 
 # 主函数
 def main ():
@@ -48,16 +48,17 @@ def main ():
             # 不需要加载存档
             if not game_data:
                 stage += 1
-                # 显示关卡界面
-                ui.show_switch_stage(screen, width, width, stage)
                 # 播放开始音乐
-                resources.start_sound.play()
+                if stage == 1: resources.start_sound.play()
+                # 显示关卡切换界面
+                ui.show_switch_stage(screen, width, width, stage)
 
             # 进入游戏
             game_result = ui.show_game(screen, width, height, num_player, stage, clock, game_data)
 
             if game_result == "back_to_start":
                 current_state = "start"
+                stage = 0
                 continue
             elif isinstance(game_result, dict):
                 game_data = game_result
@@ -75,6 +76,8 @@ def main ():
             game_data = None
         # 当前状态为结束
         elif current_state == "end":
+            stage = 0
+
             # 根据是否失败显示胜败界面
             end_result = ui.show_end(screen, width, height, is_win)
 

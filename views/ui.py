@@ -285,7 +285,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
         key_pressed = pygame.key.get_pressed()
 
         # 玩家一
-        if num_player == 1:
+        if num_player > 0:
             if key_pressed[pygame.K_w]:
                 tanksGroup.remove(tank_player1)
                 tank_player1.move_up(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
@@ -311,7 +311,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
                     resources.fire_sound.play()
                     tank_player1.shoot()
         # 玩家二
-        elif num_player > 1:
+        if num_player > 1:
             if key_pressed[pygame.K_UP]:
                 tanksGroup.remove(tank_player2)
                 tank_player2.move_up(tanksGroup, map_stage.brickGroup, map_stage.ironGroup, myhome)
