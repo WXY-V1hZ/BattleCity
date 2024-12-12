@@ -1,10 +1,12 @@
 import pygame, sys
 
+global_font = "font/fusion-pixel-10px-monospaced-zh_hans.ttf"
+
 
 # 显示菜单界面
 def show_menu (screen, width, height):
-    menu_font = pygame.font.Font('font/simkai.ttf', width // 10)
-    menu_items = ['开始游戏', '退出游戏']
+    menu_font = pygame.font.Font(global_font, width // 10)
+    menu_items = ['继续游戏', '退出游戏']
     selected_index = 0  # 当前选中的菜单项
 
     running = True
@@ -40,24 +42,12 @@ def show_menu (screen, width, height):
                     return 'exit_menu'
 
 # 开始界面显示
-def show_start (screen, width, height):
-    tfont = pygame.font.Font('font/simkai.ttf', width // 5)
-    cfont = pygame.font.Font('font/simkai.ttf', width // 20)
-    title = tfont.render(u'TANK', True, (255, 0, 0))
-    content1 = cfont.render(u'1 PLAYER（按1）', True, (0, 0, 255))
-    content2 = cfont.render(u'2 PLAYER（按2）', True, (0, 0, 255))
-    trect = title.get_rect()
-    trect.midtop = (width / 2, height / 5)
-    crect1 = content1.get_rect()
-    crect1.midtop = (width / 2, height / 1.8)
-    crect2 = content2.get_rect()
-    crect2.midtop = (width / 2, height / 1.6)
-    screen.blit(title, trect)
-    screen.blit(content1, crect1)
-    screen.blit(content2, crect2)
-    pygame.display.update()
+def show_start(screen, width, height):
+    tfont = pygame.font.Font(global_font, width // 5)
+    cfont = pygame.font.Font(global_font, width // 20)
 
     while True:
+        # 处理事件
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -74,13 +64,31 @@ def show_start (screen, width, height):
                     elif menu_result == "quit_game":
                         pygame.quit()
                         sys.exit()  # 退出游戏
+                    else:
+                        break
+
+        # 清空屏幕并绘制内容
+        screen.fill((0, 0, 0))  # 背景填充为黑色
+        title = tfont.render(u'TANK', True, (255, 0, 0))
+        content1 = cfont.render(u'1 PLAYER（按1）', True, (0, 0, 255))
+        content2 = cfont.render(u'2 PLAYER（按2）', True, (0, 0, 255))
+        trect = title.get_rect()
+        trect.midtop = (width / 2, height / 5)
+        crect1 = content1.get_rect()
+        crect1.midtop = (width / 2, height / 1.8)
+        crect2 = content2.get_rect()
+        crect2.midtop = (width / 2, height / 1.6)
+        screen.blit(title, trect)
+        screen.blit(content1, crect1)
+        screen.blit(content2, crect2)
+        pygame.display.update()
 
 # 结束界面显示
 def show_end (screen, width, height, is_win):
     bg_img = pygame.image.load("images/others/background.png")
     screen.blit(bg_img, (0, 0))
     if is_win:
-        font = pygame.font.Font('font/simkai.ttf', width // 10)
+        font = pygame.font.Font(global_font, width // 10)
         content = font.render(u'恭喜通关！', True, (255, 0, 0))
         rect = content.get_rect()
         rect.midtop = (width / 2, height / 2)
@@ -100,7 +108,7 @@ def show_end (screen, width, height, is_win):
 def show_switch_stage(screen, width, height, stage):
     bg_img = pygame.image.load("images/others/background.png")
     screen.blit(bg_img, (0, 0))
-    font = pygame.font.Font('font/simkai.ttf', width // 10)
+    font = pygame.font.Font(global_font, width // 10)
     content = font.render(u'第%d关' % stage, True, (0, 255, 0))
     rect = content.get_rect()
     rect.midtop = (width / 2, height / 2)

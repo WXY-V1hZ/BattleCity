@@ -60,6 +60,7 @@ def main ():
         # 通关或者失败，退出
         if stage > num_stage or is_gameover:
             break
+
         # 显示关卡界面
         ui.show_switch_stage(screen, 630, 630, stage)
 
