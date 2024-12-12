@@ -18,21 +18,21 @@ def main ():
     pygame.display.set_caption("TANK")
 
     # 加载图片
-    bg_img = pygame.image.load("images/others/background.png")
+    bg_img = pygame.image.load("assets/images/others/background.png")
     # 加载音效
-    add_sound = pygame.mixer.Sound("audios/add.wav")
+    add_sound = pygame.mixer.Sound("assets/audios/add.wav")
     add_sound.set_volume(1)
-    bang_sound = pygame.mixer.Sound("audios/bang.wav")
+    bang_sound = pygame.mixer.Sound("assets/audios/bang.wav")
     bang_sound.set_volume(1)
-    blast_sound = pygame.mixer.Sound("audios/blast.wav")
+    blast_sound = pygame.mixer.Sound("assets/audios/blast.wav")
     blast_sound.set_volume(1)
-    fire_sound = pygame.mixer.Sound("audios/fire.wav")
+    fire_sound = pygame.mixer.Sound("assets/audios/fire.wav")
     fire_sound.set_volume(1)
-    Gunfire_sound = pygame.mixer.Sound("audios/Gunfire.wav")
+    Gunfire_sound = pygame.mixer.Sound("assets/audios/Gunfire.wav")
     Gunfire_sound.set_volume(1)
-    hit_sound = pygame.mixer.Sound("audios/hit.wav")
+    hit_sound = pygame.mixer.Sound("assets/audios/hit.wav")
     hit_sound.set_volume(1)
-    start_sound = pygame.mixer.Sound("audios/start.wav")
+    start_sound = pygame.mixer.Sound("assets/audios/start.wav")
     start_sound.set_volume(1)
 
     # 开始界面，获取玩家数量
@@ -122,7 +122,7 @@ def main ():
         myhome = home.Home()
 
         # 加载出场特效，根据图像大小提取帧
-        appearance_img = pygame.image.load("images/others/appear.png").convert_alpha()
+        appearance_img = pygame.image.load("assets/images/others/appear.png").convert_alpha()
         appearances = []
         appearances.append(appearance_img.subsurface((0, 0), (48, 48)))
         appearances.append(appearance_img.subsurface((48, 0), (48, 48)))

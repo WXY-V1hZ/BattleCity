@@ -12,9 +12,9 @@ class myTank(pygame.sprite.Sprite):
 		self.player = player
 		# 不同玩家用不同的坦克(不同等级对应不同的图)
 		if player == 1:
-			self.tanks = ['images/myTank/tank_T1_0.png', 'images/myTank/tank_T1_1.png', 'images/myTank/tank_T1_2.png']
+			self.tanks = ['assets/images/myTank/tank_T1_0.png', 'assets/images/myTank/tank_T1_1.png', 'assets/images/myTank/tank_T1_2.png']
 		elif player == 2:
-			self.tanks = ['images/myTank/tank_T2_0.png', 'images/myTank/tank_T2_1.png', 'images/myTank/tank_T2_2.png']
+			self.tanks = ['assets/images/myTank/tank_T2_0.png', 'assets/images/myTank/tank_T2_1.png', 'assets/images/myTank/tank_T2_2.png']
 		else:
 			raise ValueError('myTank class -> player value error.')
 		# 坦克等级(初始0)
@@ -25,7 +25,7 @@ class myTank(pygame.sprite.Sprite):
 		self.tank_1 = self.tank.subsurface((48, 0), (48, 48))
 		self.rect = self.tank_0.get_rect()
 		# 保护罩
-		self.protected_mask = pygame.image.load('images/others/protect.png').convert_alpha()
+		self.protected_mask = pygame.image.load('assets/images/others/protect.png').convert_alpha()
 		self.protected_mask1 = self.protected_mask.subsurface((0, 0), (48, 48))
 		self.protected_mask2 = self.protected_mask.subsurface((48, 0), (48, 48))
 		# 坦克方向
@@ -231,10 +231,10 @@ class enemyTank(pygame.sprite.Sprite):
 		else:
 			self.kind = kind
 		# 所有坦克
-		self.tanks1 = ['images/enemyTank/enemy_1_0.png', 'images/enemyTank/enemy_1_1.png', 'images/enemyTank/enemy_1_2.png', 'images/enemyTank/enemy_1_3.png']
-		self.tanks2 = ['images/enemyTank/enemy_2_0.png', 'images/enemyTank/enemy_2_1.png', 'images/enemyTank/enemy_2_2.png', 'images/enemyTank/enemy_2_3.png']
-		self.tanks3 = ['images/enemyTank/enemy_3_0.png', 'images/enemyTank/enemy_3_1.png', 'images/enemyTank/enemy_3_2.png', 'images/enemyTank/enemy_3_3.png']
-		self.tanks4 = ['images/enemyTank/enemy_4_0.png', 'images/enemyTank/enemy_4_1.png', 'images/enemyTank/enemy_4_2.png', 'images/enemyTank/enemy_4_3.png']
+		self.tanks1 = ['assets/images/enemyTank/enemy_1_0.png', 'assets/images/enemyTank/enemy_1_1.png', 'assets/images/enemyTank/enemy_1_2.png', 'assets/images/enemyTank/enemy_1_3.png']
+		self.tanks2 = ['assets/images/enemyTank/enemy_2_0.png', 'assets/images/enemyTank/enemy_2_1.png', 'assets/images/enemyTank/enemy_2_2.png', 'assets/images/enemyTank/enemy_2_3.png']
+		self.tanks3 = ['assets/images/enemyTank/enemy_3_0.png', 'assets/images/enemyTank/enemy_3_1.png', 'assets/images/enemyTank/enemy_3_2.png', 'assets/images/enemyTank/enemy_3_3.png']
+		self.tanks4 = ['assets/images/enemyTank/enemy_4_0.png', 'assets/images/enemyTank/enemy_4_1.png', 'assets/images/enemyTank/enemy_4_2.png', 'assets/images/enemyTank/enemy_4_3.png']
 		self.tanks = [self.tanks1, self.tanks2, self.tanks3, self.tanks4]
 		# 是否携带食物(红色的坦克携带食物)
 		if is_red is None:
