@@ -76,7 +76,7 @@ def listen(screen, width, height, event):
             pygame.quit()
             sys.exit()
         elif menu_result == "save_game":
-            return archive.show_saves(screen, width, height, True)
+            save_result = archive.show_saves(screen, width, height, True)
         elif menu_result == "load_game":
             return archive.show_saves(screen, width, height, False)
         elif menu_result == "back_to_start":

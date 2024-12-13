@@ -2,7 +2,7 @@ import pygame, sys
 
 from entity import home, scene, tank, food
 from entity.resources import Resources
-from . import menu
+from . import menu, print_screen
 from utils import config
 import time
 
@@ -251,6 +251,8 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
+                print_screen.listen(screen, width, height, event)
+
                 menu_result = menu.listen(screen, width, height, event)
                 if menu_result:
                     if menu_result == "back_to_start":
