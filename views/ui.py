@@ -1,7 +1,10 @@
+import pickle
+
 import pygame, sys
 
 from entity import home, scene, tank, food
 from entity.resources import Resources
+from entity.result import Result
 from . import menu, print_screen
 from utils import config
 import time
@@ -49,7 +52,7 @@ def show_start(screen, width, height):
                     if   selected_index == 0: return 1
                     elif selected_index == 1: return 2
                     elif selected_index == 2: # 读档
-                        return archive.show_saves(screen, width, height, is_save = False)
+                        return archive.show_saves(screen, width, height)
                     else:
                         pygame.quit()
                         sys.exit()
@@ -236,14 +239,39 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
     appearances.append(appearance_img.subsurface((48, 0), (48, 48)))
     appearances.append(appearance_img.subsurface((96, 0), (48, 48)))
 
-    if game_data:
-        pass # 将game_data覆盖到基础的数据上
+    if game_data:  # 如果游戏数据存在，加载数据
+        # 加载全局状态
+        stage               = game_data.get("stage")
+        enemytanks_total    = game_data.get("enemytanks_total")
+        enemytanks_now      = game_data.get("enemytanks_now")
+        enemytanks_now_max  = game_data.get("enemytanks_now_max")
+        is_switch_tank      = game_data.get("is_switch_tank")
+        player1_moving      = game_data.get("player1_moving")
+        player2_moving      = game_data.get("player2_moving")
+        time                = game_data.get("time", time)
+        # 未能实现的:
+        # 恢复地图
+        # 恢复我方坦克
+        # 恢复敌方坦克
+        # 恢复大本营
+
+    game_data_now = {
+        "stage"             : stage,
+        "num_player"        : num_player,
+        "enemytanks_total"  : enemytanks_total,
+        "enemytanks_now"    : enemytanks_now,
+        "enemytanks_now_max": enemytanks_now_max,
+        "is_switch_tank"    : is_switch_tank,
+        "player1_moving"    : player1_moving,
+        "player2_moving"    : player2_moving,
+        "time"              : time,
+    }
 
     # 关卡主循环
     while True:
         # 胜利
         if enemytanks_total < 1 and enemytanks_now < 1:
-            return 'win'
+            return Result("win", None)
 
         # 事件监测
         for event in pygame.event.get():
@@ -253,13 +281,9 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
             elif event.type == pygame.KEYDOWN:
                 print_screen.listen(screen, width, height, event)
 
-                menu_result = menu.listen(screen, width, height, event)
-                if menu_result:
-                    if menu_result == "back_to_start":
-                        return "back_to_start"
-                    elif isinstance(menu_result, dict):
-                        return menu_result
-                else: break
+                menu_result = menu.listen(screen, width, height, event, game_data_now)
+                if menu_result is not None and (menu_result.msg == "back_to_start" or menu_result.msg == "load_game"):
+                    return menu_result
 
 
             # 增加坦克事件，检验是否还有敌方坦克 且 场上是否还能增加坦克
@@ -492,7 +516,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
             if pygame.sprite.collide_rect(tank_player.bullet, myhome):
                 tank_player.bullet.being = False
                 myhome.set_dead()
-                return 'lose'
+                return Result("lose", None)
 
         # 敌方子弹
         for each in enemytanksGroup:
@@ -515,7 +539,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
                                         mytanksGroup.remove(tank_player)
                                         tanksGroup.remove(tank_player)
                                         if len(mytanksGroup) < 1:
-                                            return 'lose'
+                                            return Result("lose", None)
                                     else:
                                         tank_player.reset()
                                 each.bullet.being = False
@@ -538,7 +562,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
                         if pygame.sprite.collide_rect(each.bullet, myhome):
                             each.bullet.being = False
                             myhome.set_dead()
-                            return 'lose'
+                            return Result("lose", None)
             else:
                 enemytanksGroup.remove(each)
                 tanksGroup.remove(each)

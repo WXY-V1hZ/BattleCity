@@ -3,6 +3,7 @@ from PIL import Image, ImageFilter
 
 from utils import config
 from . import archive
+from entity.result import Result
 
 def apply_gaussian_blur(surface, radius=10):
     """使用 Pillow 对传入的 surface 进行高斯模糊"""
@@ -16,7 +17,7 @@ def apply_gaussian_blur(surface, radius=10):
     # 将处理后的 Pillow 图像转换回 Pygame 的 Surface
     return pygame.image.fromstring(blurred_image.tobytes(), surface.get_size(), "RGBA")
 
-def show(screen, width, height):
+def show(screen, width, height, game_data_now) -> Result:
     menu_font = pygame.font.Font(config.global_font, width // 10)
     menu_items = ['继续游戏', '存档', '读档', '返回主页', '退出游戏']
     selected_index = 0  # 当前选中的菜单项
@@ -55,31 +56,21 @@ def show(screen, width, height):
                     selected_index = (selected_index + 1) % len(menu_items)
                 elif event.key == pygame.K_RETURN:  # 按回车键确认
                     if selected_index == 0:
-                        return 'exit_menu'
-                    elif selected_index == 1:
-                        return 'save_game'
-                    elif selected_index == 2:
-                        return 'load_game'
+                        return Result('exit_menu', None)
+                    elif selected_index == 1: # 存档
+                        archive.show_saves(screen, width, height, game_data_now)
+                    elif selected_index == 2: # 读档
+                        load_result = archive.show_saves(screen, width, height)
+                        if load_result is not None:
+                            return Result('load_game', load_result)
                     elif selected_index == 3:
-                        return 'back_to_start'
+                        return Result('back_to_start', None)
                     elif selected_index == 4:
-                        return 'quit_game'
-                else:  # 按Esc键退出菜单
-                    return 'exit_menu'
+                        pygame.quit()
+                        sys.exit()
+                else:
+                    return Result('exit_menu', None)# 按Esc键退出菜单
 
-def listen(screen, width, height, event):
+def listen(screen, width, height, event, game_data_now):
     if event.key == pygame.K_ESCAPE:  # 按ESC键进入菜单
-        menu_result = show(screen, width, height)
-        if menu_result == "exit_menu":
-            return 0
-        elif menu_result == "quit_game":
-            pygame.quit()
-            sys.exit()
-        elif menu_result == "save_game":
-            save_result = archive.show_saves(screen, width, height, True)
-        elif menu_result == "load_game":
-            return archive.show_saves(screen, width, height, False)
-        elif menu_result == "back_to_start":
-            return "back_to_start"
-        else:
-            return 0
+        return show(screen, width, height, game_data_now)

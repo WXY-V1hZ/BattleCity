@@ -40,9 +40,11 @@ def main ():
             start_result = ui.show_start(screen, width, height)
             if isinstance(start_result, int):
                 num_player = start_result
-            else:
+            elif start_result is not None:
                 game_data = start_result
-            current_state = "game"
+                stage = game_data["stage"]
+                num_player = game_data["num_player"]
+                current_state = "game"
         # 当前状态为游玩中
         elif current_state == "game":
             # 不需要加载存档
@@ -50,26 +52,27 @@ def main ():
                 stage += 1
                 # 播放开始音乐
                 if stage == 1: resources.start_sound.play()
-                # 显示关卡切换界面
-                ui.show_switch_stage(screen, width, width, stage)
+            # 显示关卡切换界面
+            ui.show_switch_stage(screen, width, width, stage)
 
             # 进入游戏
             game_result = ui.show_game(screen, width, height, num_player, stage, clock, game_data)
 
-            if game_result == "back_to_start":
+            if game_result.msg == "back_to_start":
                 current_state = "start"
                 stage = 0
                 continue
-            elif isinstance(game_result, dict):
-                game_data = game_result
+            elif game_result.msg == "load_game":
+                game_data = game_result.data
+                # 修改stage,num_player
                 continue
 
             # 通关
-            if stage == num_stage:
+            if stage >= num_stage:
                 is_win = True
                 current_state = "end"
             # 失败
-            if game_result == 'lose':
+            if game_result.msg == 'lose':
                 is_win = False
                 current_state = "end"
 
