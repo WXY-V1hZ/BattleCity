@@ -11,6 +11,3 @@ env/
 # IDE相关
 *.idea/
 *.vscode/
-
-# 截屏图片
-screenshots/
