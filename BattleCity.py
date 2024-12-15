@@ -44,7 +44,7 @@ def main ():
                 game_data = start_result
                 stage = game_data["stage"]
                 num_player = game_data["num_player"]
-                current_state = "game"
+            current_state = "game"
         # 当前状态为游玩中
         elif current_state == "game":
             # 不需要加载存档
