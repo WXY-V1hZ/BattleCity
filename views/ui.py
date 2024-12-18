@@ -1,5 +1,3 @@
-import pickle
-
 import pygame, sys
 
 from entity import home, scene, tank, food
@@ -13,6 +11,8 @@ from . import archive
 
 
 def show_start(screen, width, height):
+    resources = Resources.get_instance()
+    resources.bg_img = pygame.transform.scale(resources.bg_img, (width, height))  # 缩放背景图片
     tfont = pygame.font.Font(config.global_font, width // 5)
     cfont = pygame.font.Font(config.global_font, width // 20)
 
@@ -22,7 +22,7 @@ def show_start(screen, width, height):
     running = True
     while running:
         # 清空屏幕并绘制标题
-        screen.fill((0, 0, 0))  # 背景填充为黑色
+        screen.blit(resources.bg_img, (0, 0))
         title = tfont.render(u'坦克大战', True, (255, 0, 0))
         trect = title.get_rect()
         trect.midtop = (width / 2, height / 5)
@@ -49,10 +49,12 @@ def show_start(screen, width, height):
                 elif event.key == pygame.K_DOWN:  # 按下箭头
                     selected_index = (selected_index + 1) % len(start_items)
                 elif event.key == pygame.K_RETURN:  # 按回车键确认
-                    if   selected_index == 0: return 1
-                    elif selected_index == 1: return 2
+                    if   selected_index == 0: return Result("num_player", 1)
+                    elif selected_index == 1: return Result("num_player", 2)
                     elif selected_index == 2: # 读档
-                        return archive.show_saves(screen, width, height)
+                        saves_result = archive.show_saves(screen, width, height)
+                        if saves_result.msg == "back_to_home": continue
+                        return saves_result
                     else:
                         pygame.quit()
                         sys.exit()
@@ -149,7 +151,7 @@ def show_switch_stage(screen, width, height, stage):
     # 获取资源
     resources = Resources.get_instance()
 
-    screen.blit(resources.bg_img, (0, 0))
+    screen.fill((0, 0, 0))  # 背景填充为黑色
     font = pygame.font.Font(config.global_font, width // 10)
     content = font.render(u'第%d关' % stage, True, (0, 255, 0))
     rect = content.get_rect()
@@ -249,10 +251,12 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
         player1_moving      = game_data.get("player1_moving")
         player2_moving      = game_data.get("player2_moving")
         time                = game_data.get("time", time)
+
+        # tanksGroup = pygame.sprite.Group(game_data.get("tanksGroup", []))
+        # mytanksGroup = pygame.sprite.Group(game_data.get("mytanksGroup", []))
+        # enemytanksGroup = pygame.sprite.Group(game_data.get("enemytanksGroup", []))
         # 未能实现的:
         # 恢复地图
-        # 恢复我方坦克
-        # 恢复敌方坦克
         # 恢复大本营
 
     game_data_now = {
@@ -265,6 +269,12 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
         "player1_moving"    : player1_moving,
         "player2_moving"    : player2_moving,
         "time"              : time,
+
+        # "tanksGroup"     : list(tanksGroup),
+        # "mytanksGroup"   : list(mytanksGroup),
+        # "enemytanksGroup": list(enemytanksGroup),
+        # "map_stage"      : map_stage.export_state(),
+        # "myhome"         : myhome.export_state()
     }
 
     # 关卡主循环
@@ -363,8 +373,8 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
                     resources.fire_sound.play()
                     tank_player2.shoot()
 
-        # 绘制背景
-        screen.blit(resources.bg_img, (0, 0))
+        # 绘制背景 TODO: 地图修改
+        screen.fill((0, 0, 0))  # 背景填充为黑色
         # 石头墙
         for each in map_stage.brickGroup:
             screen.blit(each.brick, each.rect)

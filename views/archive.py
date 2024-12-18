@@ -5,6 +5,7 @@ from datetime import datetime
 import pygame
 import sys
 from utils import config
+from entity.result import Result
 
 
 def show_saves(screen, width, height, game_data_now=None):
@@ -21,7 +22,8 @@ def show_saves(screen, width, height, game_data_now=None):
                 with open(file_path, "rb") as f:
                     data = pickle.load(f)
                     save_data.append(data)
-            except (pickle.UnpicklingError, IOError):
+            except Exception as e:
+                print(f"加载存档出错, {e}")
                 save_data.append({"is_empty": True})  # 防止解析错误
         else:
             save_data.append({"is_empty": True})  # 文件不存在则视为空存档
@@ -98,9 +100,9 @@ def show_saves(screen, width, height, game_data_now=None):
                     if game_data_now is not None:
                         return save_game(selected_file, game_data_now)  # 保存存档
                     else:
-                        return load_game(selected_file)  # 加载存档
+                        return Result("load_game", load_game(selected_file))
                 elif event.key == pygame.K_ESCAPE:  # 返回主菜单
-                    return None
+                    return Result("back_to_home", None)
 
 def save_game(file_path, game_data_now):
     """保存当前游戏状态到指定存档"""
@@ -109,14 +111,14 @@ def save_game(file_path, game_data_now):
         with open(file_path, "wb") as f:
             pickle.dump(game_data_now, f)
         return "存档成功"
-    except:
+    except Exception as e:
+        print(f"存档失败, {e}")
         return "存档失败"
 
 
 def load_game(file_path):
     """加载游戏存档"""
     try:
-
         with open(file_path, "rb") as f:
             data = pickle.load(f)
         return data

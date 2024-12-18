@@ -38,12 +38,13 @@ def main ():
         # 当前状态为开始
         if current_state == "start":
             start_result = ui.show_start(screen, width, height)
-            if isinstance(start_result, int):
-                num_player = start_result
-            elif start_result is not None:
-                game_data = start_result
-                stage = game_data["stage"]
-                num_player = game_data["num_player"]
+            if start_result.msg == "num_player":
+                num_player = start_result.data
+            elif start_result.msg == "load_game":
+                game_data = start_result.data
+                if game_data is not None:
+                    stage = game_data["stage"]
+                    num_player = game_data["num_player"]
             current_state = "game"
         # 当前状态为游玩中
         elif current_state == "game":
@@ -60,11 +61,13 @@ def main ():
 
             if game_result.msg == "back_to_start":
                 current_state = "start"
+                game_data = None
                 stage = 0
                 continue
             elif game_result.msg == "load_game":
                 game_data = game_result.data
-                # 修改stage,num_player
+                stage = game_data["stage"]
+                num_player = game_data["num_player"]
                 continue
 
             # 通关
@@ -80,6 +83,7 @@ def main ():
         # 当前状态为结束
         elif current_state == "end":
             stage = 0
+            game_data = None
 
             # 根据是否失败显示胜败界面
             end_result = ui.show_end(screen, width, height, is_win)

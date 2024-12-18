@@ -60,9 +60,9 @@ def show(screen, width, height, game_data_now) -> Result:
                     elif selected_index == 1: # 存档
                         archive.show_saves(screen, width, height, game_data_now)
                     elif selected_index == 2: # 读档
-                        load_result = archive.show_saves(screen, width, height)
-                        if load_result is not None:
-                            return Result('load_game', load_result)
+                        saves_result = archive.show_saves(screen, width, height)
+                        if saves_result.msg == "load_game":
+                            return saves_result
                     elif selected_index == 3:
                         return Result('back_to_start', None)
                     elif selected_index == 4:
