@@ -1,0 +1,95 @@
+commit f881118588de36dd15d3bb39a2fa18bd1520f816
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Wed Dec 18 16:36:38 2024 +0800
+
+    修复了一些关于存档的bug，更换了开始界面的背景图
+
+commit 41332b095a3630229be8d821e48c2509ebc4d770
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Sun Dec 15 17:08:19 2024 +0800
+
+    修改了主函数的小bug;使用pyinstaller封装了一个exe文件,同目录下需要有assets文件夹才能运行.
+
+commit 9aafe4baa9349647c94a1fdb75a78b6f051da06d
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Sun Dec 15 16:47:59 2024 +0800
+
+    修改gitignore
+
+commit bf5c219a261ba7684b69e8603ddbb9a16f8946ad
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Sun Dec 15 16:43:46 2024 +0800
+
+    优化了代码结构,使用一个Result类来统一管理每个界面的返回结果;实现了存读档的功能,美化了存档展示界面;存读档暂时只能存下关卡和模式;优化了部分代码逻辑以及运行逻辑
+
+commit dba443216a2ed89d2e561e3f77b96b2a1474b385
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Fri Dec 13 23:14:12 2024 +0800
+
+    设置了gitignore，忽略截屏文件
+
+commit c6af597422cc6288b7ad5296f518dc3a91e9e308
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Fri Dec 13 23:12:25 2024 +0800
+
+    实现了考察点二：在游戏中按下Ctrl+p触发截屏，同时包含了截屏的过渡动画
+
+commit 7bca705a587c40ffd938791de93a937437dbded7
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 23:45:51 2024 +0800
+
+    修复了双人模式玩家一无法移动的bug；查看了一下存读档功能，目前还无法实现
+
+commit 30881af41998ff4b391dd691a21d7b075dd0b03b
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 20:45:29 2024 +0800
+
+    尝试开发存/读档功能，目前由关卡数不受控制的bug
+
+commit 90dc87b2102f033caa309ef64bcbfccafa71fbb7
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 17:56:39 2024 +0800
+
+    优化了Resources类的代码
+
+commit ad15c05daca57ac399590235fd9b075009abf6bd
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 17:44:56 2024 +0800
+
+    为主函数增加状态机的特性，确保后面的“返回主页”功能开发顺利；状态机的开发大幅优化了主函数的代码结构；添加Resources类，采用单例模式，用于全局加载资源；将menu的显示功能提取到单独的文件中，添加监听器listener函数，便于在每个界面中添加监听esc键的功能
+
+commit 0849a5788c1c84140b789dda29bc0037e7fe0d14
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 14:40:50 2024 +0800
+
+    将所有的外部资源移动到assets包内，重构代码；为菜单添加存/读档选项，添加模糊背景特性
+
+commit 8b5e452209811c590347276dd255a6e8740f1f44
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Thu Dec 12 13:23:25 2024 +0800
+
+    更换字体，优化ui界面的代码结构，修复了显示菜单的bug
+
+commit 95cd4dd2f7a3e006e6545875b6ca1d0ed376a21f
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Wed Dec 11 23:12:17 2024 +0800
+
+    优化代码结构，将显示界面相关的代码放入views.ui包中，开发按下esc触发显示菜单功能...
+
+commit d1c5773a6e21325c12a52bd6879f525f9185e7a1
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Tue Dec 10 21:40:32 2024 +0800
+
+    重构start.py，阅读，同时优化代码结构
+
+commit 955e5a139178d17afbe4a158e6dde4b128057d79
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Tue Dec 10 19:09:47 2024 +0800
+
+    添加.gitignore文件
+
+commit 28268059a7e5df866925381c16ac910b6b40b1d0
+Author: WXY-V1hZ <1193230219@stu.jiangnan.edu.cn>
+Date:   Tue Dec 10 18:56:20 2024 +0800
+
+    更改基础项目的结构，将除start.py外的类放入entity软件包内

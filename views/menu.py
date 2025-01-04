@@ -68,7 +68,7 @@ def show(screen, width, height, game_data_now) -> Result:
                     elif selected_index == 4:
                         pygame.quit()
                         sys.exit()
-                else:
+                elif event.key == pygame.K_ESCAPE:
                     return Result('exit_menu', None)# 按Esc键退出菜单
 
 def listen(screen, width, height, event, game_data_now):

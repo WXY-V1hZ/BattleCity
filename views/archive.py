@@ -115,7 +115,6 @@ def save_game(file_path, game_data_now):
         print(f"存档失败, {e}")
         return "存档失败"
 
-
 def load_game(file_path):
     """加载游戏存档"""
     try:
@@ -124,3 +123,4 @@ def load_game(file_path):
         return data
     except:
         return None
+

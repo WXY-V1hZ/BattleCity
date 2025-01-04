@@ -1,5 +1,8 @@
 import pygame
 
+width = 630
+height = 630
+
 class Resources:
     _instance = None
 
@@ -15,6 +18,8 @@ class Resources:
             return
 
         self.bg_img = pygame.image.load("assets/images/others/background.png")
+        self.bg_img = pygame.transform.scale(self.bg_img, (width, height))
+
         self.add_sound = pygame.mixer.Sound("assets/audios/add.wav")
         self.bang_sound = pygame.mixer.Sound("assets/audios/bang.wav")
         self.blast_sound = pygame.mixer.Sound("assets/audios/blast.wav")

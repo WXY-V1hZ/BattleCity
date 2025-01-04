@@ -9,7 +9,7 @@ import time
 
 from . import archive
 
-
+# 显示开始界面
 def show_start(screen, width, height):
     resources = Resources.get_instance()
     resources.bg_img = pygame.transform.scale(resources.bg_img, (width, height))  # 缩放背景图片
@@ -59,6 +59,7 @@ def show_start(screen, width, height):
                         pygame.quit()
                         sys.exit()
 
+# 显示过渡动画
 def transition_animation (screen, width, height, is_win):
     """过渡动画效果：截取最后的画面并逐渐覆盖，胜利为白色，失败为红色"""
     # 胜利和失败的颜色设置
@@ -84,7 +85,7 @@ def transition_animation (screen, width, height, is_win):
 
         time.sleep(transition_duration / transition_frames)  # 每帧间隔时间
 
-# 结束界面显示
+# 显示结束界面
 def show_end(screen, width, height, is_win):
     # 获取资源
     resources = Resources.get_instance()
@@ -102,7 +103,6 @@ def show_end(screen, width, height, is_win):
     running = True
     while running:
         # 清空屏幕并绘制背景
-        screen.fill((0, 0, 0))  # 背景填充为黑色
         screen.blit(resources.bg_img, (0, 0))  # 背景图
 
         # 绘制胜利或失败信息
@@ -147,6 +147,7 @@ def show_end(screen, width, height, is_win):
 
                     # 关卡切换界面
 
+# 显示关卡切换界面
 def show_switch_stage(screen, width, height, stage):
     # 获取资源
     resources = Resources.get_instance()
@@ -173,6 +174,7 @@ def show_switch_stage(screen, width, height, stage):
                 pygame.time.set_timer(delay_event, 0)  # 停止定时器
                 return
 
+# 显示游戏界面
 def show_game(screen, width, height, num_player, stage, clock, game_data):
     # 获取资源
     resources = Resources.get_instance()
@@ -256,6 +258,7 @@ def show_game(screen, width, height, num_player, stage, clock, game_data):
         # mytanksGroup = pygame.sprite.Group(game_data.get("mytanksGroup", []))
         # enemytanksGroup = pygame.sprite.Group(game_data.get("enemytanksGroup", []))
         # 未能实现的:
+        # 恢复角色、物品
         # 恢复地图
         # 恢复大本营
 

@@ -30,6 +30,7 @@ def main ():
     pygame.display.set_caption("坦克大战")
 
     while True:
+        # 监测按键
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
